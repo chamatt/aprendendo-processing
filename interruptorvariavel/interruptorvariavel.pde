@@ -1,20 +1,20 @@
-int w = 800;
-int h = 600;
+int w = width;
+int h = height;
 float rot = 0;
 int posCaixaX = w/2;
 int posCaixaY = h/2;
-int tamCaixa = 400;
+int tamCaixa = h/2;
 int centroX = w/2;
 int centroY = h/2;
 
 int posSliderContainerX = centroX;
-int posSliderContainerY = centroY+100;
-int tamSliderContainerX = 300;
-int tamSliderContainerY = 80;
+int posSliderContainerY = centroY+int(tamanhoRelativo(100, 400, tamCaixa));
+int tamSliderContainerX = int(tamanhoRelativo(300, 400, tamCaixa));
+int tamSliderContainerY = int(tamanhoRelativo(80, 400, tamCaixa));
 
-int tamSlider = 70;
+int tamSlider = int(tamanhoRelativo(70, 400, tamCaixa));
 //int posSliderX = centroX;
-int posSliderY = centroY+100;
+int posSliderY = centroY+int(tamanhoRelativo(100, 400, tamCaixa));
 int posSliderX = mouseX;
 
 float barStart = posSliderContainerX-tamSliderContainerX/2+tamSlider/2+5;
@@ -29,94 +29,37 @@ color greyColorDefault = #333333;
 color onContainer = #ffffff;
 color offContainer = #ffffff;
 
-int posOnButtonX = centroX-100;
-int posOnButtonY = centroY-100;
-int tamOnButton = 100;
+int posOnButtonX = centroX-int(tamanhoRelativo(100, 400, tamCaixa));
+int posOnButtonY = centroY-int(tamanhoRelativo(100, 400, tamCaixa));
+int tamOnButton = int(tamanhoRelativo(100, 400, tamCaixa));
 
-int posOffButtonX = centroX+100;
-int posOffButtonY = centroY-100;
-int tamOffButton = 100;
-int lastSetPercentage = 0;
+int posOffButtonX = centroX+int(tamanhoRelativo(100, 400, tamCaixa));
+int posOffButtonY = centroY-int(tamanhoRelativo(100, 400, tamCaixa));
+int tamOffButton = int(tamanhoRelativo(100, 400, tamCaixa));
 
 
 int percentage;
 
-void setup(){
+
+void setup() {
   size(800, 600);
+  surface.setResizable(true);
 }
 
 void draw(){
-  background(greyColorDefault);
-  fill(255);  
-  rectMode(CENTER);
-  rect(w/2, h/2, tamCaixa, tamCaixa, 10, 10, 10, 10);
-  
-  //interruptor on
-  fill(onContainer);
-  rectMode(CENTER);
-  color onColor = onColorDefault;
-  if(!isOn)
-     onColor = greyColorDefault;
-  rect(posOnButtonX, posOnButtonY, tamOnButton, tamOnButton, 10, 10, 10, 10);
-  fill(onColor);
-  rect(posOnButtonX, posOnButtonY+30, 50, 10, 10);
-  fill(0);
-  text("ON", posOnButtonX, posOnButtonY);
-  
-  
-  //interruptor off
-  fill(offContainer);
-  rectMode(CENTER);
-  rect(posOffButtonX, posOffButtonY, tamOffButton, tamOffButton, 10, 10, 10, 10);
-  color offColor = offColorDefault;
-  if(isOn)
-     offColor = greyColorDefault;
-  fill(offColor);
-  rect(posOffButtonX, posOffButtonY+30, 50, 10, 10);
-  fill(0);
-  text("OFF", posOffButtonX, posOffButtonY);
-  
-  //Slider
-  fill(#555555);
-  rectMode(CENTER);
-  rect(posSliderContainerX, posSliderContainerY, tamSliderContainerX, tamSliderContainerY, 10, 10, 10, 10);
-  fill(246);
-  //if(!isOn){
-  //  //posSliderX = posSliderContainerX-tamSliderContainerX/2-tamSlider/2-5;
-  //  posSliderX = int(percentage*(barEnd-barStart)/100 + barStart);
-  //}
-  if(posSliderX+tamSlider/2 >= posSliderContainerX+tamSliderContainerX/2){
-      posSliderX = int(barEnd);
-  }
-  else if(posSliderX-tamSlider/2 <= posSliderContainerX-tamSliderContainerX/2){
-    posSliderX = int(barStart);
-  }
-  fill(20);
-  ellipse(posSliderX+2, posSliderY+2, tamSlider , tamSlider);
-  fill(255);
-  ellipse(posSliderX, posSliderY, tamSlider , tamSlider);
-  
-  //percentage
-  
-  percentage = int(100*(posSliderX-barStart)/(barEnd-barStart));
-  print(percentage);
-  print("\n");
-  fill(greyColorDefault);
-  rect(centroX, centroY, 50, 50, 10);
-  fill(#eeeeee);
-  textAlign(CENTER);
-  textSize(14);
-  text(str(percentage) + "%", centroX, centroY+5);
-  
-  
-  
+  variablesRestart();
+  drawContainer();
+  drawOnButton();
+  drawOffButton();
+  drawSliderContainer();
+  drawSlider();
+  drawPercentage();
 }
 
 
 void mouseDragged(){
   if(mouseHoveringSlider()){
     posSliderX = mouseX;
-    print("oi");
   }
 }
 
@@ -156,4 +99,114 @@ void mouseReleased(){
   offContainer = #ffffff;
 }
 
+void drawContainer(){
+  background(greyColorDefault);
+  fill(255);  
+  rectMode(CENTER);
+  rect(w/2, h/2, tamCaixa, tamCaixa, 10, 10, 10, 10); 
+}
+
+void drawOnButton(){
+  fill(onContainer);
+  rectMode(CENTER);
+  color onColor = onColorDefault;
+  if(!isOn)
+     onColor = greyColorDefault;
+  rect(posOnButtonX, posOnButtonY, tamOnButton, tamOnButton, 10, 10, 10, 10);
+  fill(onColor);
+  rect(posOnButtonX, posOnButtonY+int(tamanhoRelativo(30, 400, tamCaixa)), int(tamanhoRelativo(50, 400, tamCaixa)), int(tamanhoRelativo(10, 400, tamCaixa)), 10);
+  fill(0);
+  text("ON", posOnButtonX, posOnButtonY); 
+}
+
+void drawOffButton(){
+  fill(offContainer);
+  rectMode(CENTER);
+  rect(posOffButtonX, posOffButtonY, tamOffButton, tamOffButton, 10, 10, 10, 10);
+  color offColor = offColorDefault;
+  if(isOn)
+     offColor = greyColorDefault;
+  fill(offColor);
+  rect(posOffButtonX, posOffButtonY+int(tamanhoRelativo(30, 400, tamCaixa)), int(tamanhoRelativo(50, 400, tamCaixa)), int(tamanhoRelativo(10, 400, tamCaixa)), 10);
+  fill(0);
+  text("OFF", posOffButtonX, posOffButtonY);
+}
+
+void drawSliderContainer(){
+  fill(#555555);
+  rectMode(CENTER);
+  rect(posSliderContainerX, posSliderContainerY, tamSliderContainerX, tamSliderContainerY, 10, 10, 10, 10); 
+}
+
+void drawSlider(){
+  if(!isOn){
+    posSliderX = posSliderContainerX-tamSliderContainerX/2-tamSlider/2-5;
+    //posSliderX = int(percentage*(barEnd-barStart)/100 + barStart);
+  }
+  checkOutOfBounds();
+  fill(20);
+  ellipse(posSliderX+2, posSliderY+2, tamSlider , tamSlider);
+  fill(255);
+  ellipse(posSliderX, posSliderY, tamSlider , tamSlider);
+}
+
+void checkOutOfBounds(){
+  if(posSliderX+tamSlider/2 >= posSliderContainerX+tamSliderContainerX/2){
+    posSliderX = int(barEnd);
+  }
+  else if(posSliderX-tamSlider/2 <= posSliderContainerX-tamSliderContainerX/2){
+    posSliderX = int(barStart);
+  } 
+}
+
+void drawPercentage(){
+  percentage = int(100*(posSliderX-barStart)/(barEnd-barStart));
+  fill(greyColorDefault);
+  rect(centroX, centroY, int(tamanhoRelativo(50, 400, tamCaixa)), int(tamanhoRelativo(50, 400, tamCaixa)), 10);
+  fill(#eeeeee);
+  textAlign(CENTER);
+  textSize(int(tamanhoRelativo(18, 400, tamCaixa)));
+  text(str(percentage) + "%", centroX, centroY+int(tamanhoRelativo(5, 400, tamCaixa))); 
+}
 //MouseClickedOnButton()
+
+float tamanhoRelativo(int valor, int referencia, int dimensao ){
+  return float(valor)/float(referencia)*float(dimensao);
+}
+
+void variablesRestart(){
+   w = width;
+   h = height;
+   posCaixaX = w/2;
+   posCaixaY = h/2;
+   tamCaixa = 3*h/4;
+   centroX = w/2;
+   centroY = h/2;
+  
+   posSliderContainerX = centroX;
+   posSliderContainerY = centroY+int(tamanhoRelativo(100, 400, tamCaixa));
+   tamSliderContainerX = int(tamanhoRelativo(300, 400, tamCaixa));
+   tamSliderContainerY = int(tamanhoRelativo(80, 400, tamCaixa));
+  
+   tamSlider = int(tamanhoRelativo(70, 400, tamCaixa));
+  //int posSliderX = centroX;
+   posSliderY = centroY+int(tamanhoRelativo(100, 400, tamCaixa));
+  
+  barStart = posSliderContainerX-tamSliderContainerX/2+tamSlider/2+5;
+  barEnd = posSliderContainerX+tamSliderContainerX/2-tamSlider/2-5;
+  
+   onColorDefault = #00ff64;
+   offColorDefault = #ff0064;
+   greyColorDefault = #333333;
+   onContainer = #ffffff;
+   offContainer = #ffffff;
+  
+   posOnButtonX = centroX-int(tamanhoRelativo(100, 400, tamCaixa));
+   posOnButtonY = centroY-int(tamanhoRelativo(100, 400, tamCaixa));
+   tamOnButton = int(tamanhoRelativo(100, 400, tamCaixa));
+  
+   posOffButtonX = centroX+int(tamanhoRelativo(100, 400, tamCaixa));
+   posOffButtonY = centroY-int(tamanhoRelativo(100, 400, tamCaixa));
+   tamOffButton = int(tamanhoRelativo(100, 400, tamCaixa));
+  
+}
